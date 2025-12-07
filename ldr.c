@@ -1,4 +1,38 @@
+
+/*
+ * ldr.c
+ *
+ *  Created on: Nov 30, 2025
+ *      Author: jeremiahtollossa
+ */
+
 #include "ldr.h"
+
+static ADC_HandleTypeDef *ldr_hadc;
+
+void LDR_Init(ADC_HandleTypeDef *hadc) {
+    ldr_hadc = hadc;
+}
+
+float LDR_ReadVoltage(void) {
+    // 1. Start ADC Conversion
+    HAL_ADC_Start(ldr_hadc);
+
+    // 2. Wait for conversion to finish
+    if (HAL_ADC_PollForConversion(ldr_hadc, 10) == HAL_OK) {
+        uint32_t rawValue = HAL_ADC_GetValue(ldr_hadc);
+
+        // 3. Convert to Voltage (12-bit ADC = 4095 max, Vref = 3.3V)
+        float voltage = (float)rawValue * (3.3f / 4095.0f);
+        return voltage;
+    }
+
+    return -1.0f; // Error
+}
+
+
+//Old LDR.c
+/*#include "ldr.h"
 #include "motor.h"
 
 ADC_HandleTypeDef hadc1;
@@ -28,4 +62,5 @@ void LDR_Check(void) {
 
     if (avg > 3000) Motor_Close();
     else if (avg < 1500) Motor_Open();
-}
+}*/
+
