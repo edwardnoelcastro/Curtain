@@ -74,10 +74,7 @@ void App_Initialize(UART_HandleTypeDef *huart, ADC_HandleTypeDef *hadc) {
 
 void App_MainLoop(void) {
     static uint32_t lastLDRCheck = 0;
-
-    // Check for UART Commands
     char cmd = UART_GetCommand();
-
     if (cmd != 0) {
         char echoMsg[32];
         sprintf(echoMsg, "Command: %c", cmd);
@@ -108,8 +105,6 @@ void App_MainLoop(void) {
                 break;
         }
     }
-
-    // Check LDR continuously (every 500ms)
     if (HAL_GetTick() - lastLDRCheck > 500) {
         CheckLDR();
         lastLDRCheck = HAL_GetTick();
@@ -142,3 +137,4 @@ void App_MainLoop(void) {
     }
 }
 */
+
